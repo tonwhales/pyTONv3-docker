@@ -18,6 +18,10 @@ RUN python3 -m pip install tvm_valuetypes aiohttp aiocache psutil crc16 requests
 # TON
 WORKDIR /usr/src
 RUN git clone --recursive https://github.com/tonwhales/ton-distrib.git ton
+COPY tonlib.patch /usr/src/ton/
+WORKDIR /usr/src/ton
+RUN git apply /usr/src/ton/tonlib.patch
+WORKDIR /usr/src
 RUN mkdir build
 WORKDIR /usr/src/build
 RUN CC=$(which clang) && CXX=$(which clang++) && CCACHE_DISABLE=1 && CFLAGS=-Wno-error && cmake -DCMAKE_BUILD_TYPE=Release ../ton
