@@ -31,12 +31,11 @@ RUN make -j 4 tonlibjson
 EXPOSE 8080
 WORKDIR /usr/src/pytonv3
 ENV GETMETHODS false
-ENV TON_CONFIG /usr/src/pytonv3/config.json
 
 # Milticlient branch
 RUN git clone https://github.com/EmelyanenkoK/pytonv3.git /usr/src/pytonv3 && git checkout 84e2e5ec4b521146c83b5a5810899155250d4b6f
+COPY run.sh /usr/src/pytonv3/
 
-# Add config
-ADD config.json .
-
-CMD python3 -m pyTON --cdll /usr/src/build/tonlib/libtonlibjson.so --port 8080 --getmethods ${GETMETHODS} --liteserverconfig ${TON_CONFIG} 
+# Run
+ENTRYPOINT [ "/usr/src/pytonv3/run.sh" ]
+CMD python3 -m pyTON --cdll /usr/src/build/tonlib/libtonlibjson.so --port 8080 --getmethods ${GETMETHODS} --liteserverconfig /usr/src/pytonv3/config.json
